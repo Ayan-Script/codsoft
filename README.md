@@ -41,3 +41,11 @@ An unbeatable Tic-Tac-Toe game using the **Minimax algorithm** with Alpha-Beta p
 
 3. **Explore Projects**:
    Navigate to each project directory and run the application as specified above.
+
+---
+
+## Author
+
+- **Ayan**
+- **Email**: [ayankarmakar076@gmail.com](mailto:ayankarmakar076@gmail.com)
+- **GitHub**: [Ayan-Script](https://github.com/Ayan-Script)
