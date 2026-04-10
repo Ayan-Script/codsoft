@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movie Recommender</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #0d0d0d;
+      color: #ffffff;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #161622;
+      padding: 18px 40px;
+      border-bottom: 1px solid #2a2a40;
+    }
+
+    header h1 {
+      font-size: 1.7rem;
+      color: #7c6aff;
+    }
+
+    .container {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 40px;
+    }
+
+    .hero {
+      background: #161622;
+      border: 1px solid #2a2a40;
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .hero h2 {
+      font-size: 1.45rem;
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      color: #a0a0b2;
+      line-height: 1.6;
+      margin-bottom: 18px;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 14px 16px;
+      font-size: 15px;
+      background: #1e1e30;
+      color: #fff;
+      border: 1px solid #3a3a55;
+      border-radius: 8px;
+      outline: none;
+    }
+
+    .search-input:focus {
+      border-color: #7c6aff;
+    }
+
+    .action-btn {
+      padding: 14px 24px;
+      font-size: 15px;
+      font-weight: 600;
+      background: #7c6aff;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .action-btn:hover {
+      background: #6254e0;
+    }
+
+    .action-btn:disabled {
+      background: #444;
+      cursor: default;
+    }
+
+    .helper {
+      margin-top: 10px;
+      color: #8d8da3;
+      font-size: 14px;
+    }
+
+    .status {
+      display: none;
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    #loader {
+      background: rgba(124, 106, 255, 0.12);
+      color: #ddd7ff;
+      border: 1px solid rgba(124, 106, 255, 0.28);
+    }
+
+    #error-msg {
+      background: rgba(255, 107, 107, 0.08);
+      color: #ff8f8f;
+      border: 1px solid rgba(255, 107, 107, 0.24);
+    }
+
+    #selected-section {
+      display: none;
+      align-items: center;
+      gap: 20px;
+      background: #161622;
+      border: 1px solid #2a2a40;
+      border-radius: 14px;
+      padding: 20px 24px;
+      margin-bottom: 24px;
+    }
+
+    #selected-section img {
+      width: 100px;
+      aspect-ratio: 2 / 3;
+      object-fit: cover;
+      border-radius: 10px;
+      background: #111;
+      flex-shrink: 0;
+    }
+
+    #selected-section h3 {
+      font-size: 1.3rem;
+      margin-bottom: 6px;
+    }
+
+    #selected-section p {
+      color: #9a9ab0;
+      font-size: 14px;
+    }
+
+    #results-section {
+      display: none;
+    }
+
+    .landing-section {
+      margin-top: 8px;
+      margin-bottom: 28px;
+    }
+
+    .results-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .results-head h3 {
+      font-size: 1.15rem;
+    }
+
+    .results-head p {
+      color: #8f8fa5;
+      font-size: 14px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: #1a1a2e;
+      border: 1px solid #2a2a40;
+      border-radius: 10px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      position: relative;
+      color: #fff;
+      text-align: left;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(124, 106, 255, 0.22);
+    }
+
+    .card img {
+      width: 100%;
+      aspect-ratio: 2 / 3;
+      object-fit: cover;
+      display: block;
+      background: #111;
+    }
+
+    .card-info {
+      padding: 10px;
+    }
+
+    .card-title {
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.35;
+      margin-bottom: 4px;
+    }
+
+    .card-genres {
+      font-size: 11px;
+      color: #888;
+      line-height: 1.4;
+    }
+
+    .card-score {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(124, 106, 255, 0.9);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 999px;
+    }
+
+    .empty-state {
+      color: #9a9ab0;
+      font-size: 14px;
+      padding: 12px 0;
+    }
+
+    @media (max-width: 760px) {
+      header {
+        padding: 16px 20px;
+      }
+
+      .container {
+        width: min(100% - 20px, 1180px);
+        padding-top: 20px;
+      }
+
+      .hero,
+      #selected-section {
+        padding: 18px;
+      }
+
+      .controls {
+        grid-template-columns: 1fr;
+      }
+
+      .results-head {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      #selected-section {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Movie Recommender</h1>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h2>Find movies like your favorite one</h2>
+      <p>Start typing a movie title, choose the closest match, and get recommendations based on that movie.</p>
+
+      <div class="controls">
+        <input
+          id="movie-search"
+          class="search-input"
+          type="text"
+          list="movie-options"
+          placeholder="Search for a movie title"
+          autocomplete="off"
+        >
+        <button id="rec-btn" class="action-btn" type="button" onclick="getRecommendations()">Recommend</button>
+      </div>
+
+      <datalist id="movie-options">
+        {% for movie in movies %}
+        <option value="{{ movie }}"></option>
+        {% endfor %}
+      </datalist>
+
+      <p class="helper">Type a movie name and press Enter or click Recommend.</p>
+
+      <div id="loader" class="status">Fetching recommendations...</div>
+      <div id="error-msg" class="status"></div>
+    </section>
+
+    <section class="landing-section">
+      <div class="results-head">
+        <h3>Suggested movies</h3>
+        <p>Click any movie to get similar recommendations.</p>
+      </div>
+      <div class="grid">
+        {% for movie in suggested_movies %}
+        <button class="card" type="button" onclick='pickAndRecommend({{ movie.title|tojson }})'>
+          <img src="{{ movie.poster }}" alt="{{ movie.title }}" loading="lazy">
+          <div class="card-info">
+            <div class="card-title">{{ movie.title }}</div>
+            <div class="card-genres">{{ movie.genres|join(', ') }}</div>
+          </div>
+        </button>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section id="selected-section">
+      <img id="selected-poster" src="" alt="Selected movie poster">
+      <div>
+        <h3 id="selected-title"></h3>
+        <p>Showing similar movies based on your selected title.</p>
+      </div>
+    </section>
+
+    <section id="results-section">
+      <div class="results-head">
+        <h3 id="results-heading">Recommendations</h3>
+        <p>Click any movie card to search from that title.</p>
+      </div>
+      <div class="grid" id="results-grid"></div>
+    </section>
+  </main>
+
+  <script>
+    const movieTitles = {{ movies|tojson }};
+
+    function escapeHtml(value) {
+      return value
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+
+    function resolveTypedTitle(query) {
+      const cleaned = query.trim();
+      if (!cleaned) {
+        return '';
+      }
+
+      const exact = movieTitles.find(title => title.toLowerCase() === cleaned.toLowerCase());
+      if (exact) {
+        return exact;
+      }
+
+      const startsWith = movieTitles.find(title => title.toLowerCase().startsWith(cleaned.toLowerCase()));
+      if (startsWith) {
+        return startsWith;
+      }
+
+      const contains = movieTitles.find(title => title.toLowerCase().includes(cleaned.toLowerCase()));
+      return contains || '';
+    }
+
+    function renderMovieCards(results) {
+      if (!results.length) {
+        return '<p class="empty-state">No similar movies were found for that title.</p>';
+      }
+
+      return results.map(movie => `
+        <button class="card" type="button" onclick='pickAndRecommend(${JSON.stringify(movie.title)})'>
+          <span class="card-score">${movie.score}%</span>
+          <img src="${escapeHtml(movie.poster || '')}" alt="${escapeHtml(movie.title)} poster" loading="lazy">
+          <div class="card-info">
+            <div class="card-title">${escapeHtml(movie.title)}</div>
+            <div class="card-genres">${escapeHtml(movie.genres.join(', '))}</div>
+          </div>
+        </button>
+      `).join('');
+    }
+
+    async function getRecommendations() {
+      const input = document.getElementById('movie-search');
+      const resolvedTitle = resolveTypedTitle(input.value);
+      const errorMessage = document.getElementById('error-msg');
+
+      if (!resolvedTitle) {
+        errorMessage.textContent = 'Movie not found. Try a title from the suggestions list.';
+        errorMessage.style.display = 'block';
+        return;
+      }
+
+      input.value = resolvedTitle;
+      document.getElementById('rec-btn').disabled = true;
+      document.getElementById('loader').style.display = 'block';
+      errorMessage.style.display = 'none';
+
+      try {
+        const response = await fetch('/recommend', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ movie: resolvedTitle }),
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.error || `Server error: ${response.status}`);
+        }
+
+        document.getElementById('selected-poster').src = data.selected_poster || '';
+        document.getElementById('selected-title').textContent = data.movie;
+        document.getElementById('selected-section').style.display = 'flex';
+
+        document.getElementById('results-heading').textContent =
+          `Top ${data.results.length} recommendations for "${data.movie}"`;
+        document.getElementById('results-grid').innerHTML = renderMovieCards(data.results);
+        document.getElementById('results-section').style.display = 'block';
+        document.getElementById('results-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } catch (error) {
+        errorMessage.textContent = error.message;
+        errorMessage.style.display = 'block';
+      } finally {
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('rec-btn').disabled = false;
+      }
+    }
+
+    function pickAndRecommend(title) {
+      document.getElementById('movie-search').value = title;
+      getRecommendations();
+    }
+
+    document.getElementById('movie-search').addEventListener('keydown', function(event) {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        getRecommendations();
+      }
+    });
+  </script>
+</body>
+</html>

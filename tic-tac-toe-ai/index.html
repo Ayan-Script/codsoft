@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tic-Tac-Toe AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <section class="hero-panel">
+      <p class="eyebrow">Game Setup</p>
+      <h1>Tic-Tac-Toe</h1>
+
+      <div class="control-grid">
+        <div class="control-card">
+          <span class="control-label">Your symbol</span>
+          <div id="symbol-picker" class="option-picker" role="group" aria-label="Your symbol">
+            <button type="button" class="option-chip active" data-symbol="X">X</button>
+            <button type="button" class="option-chip" data-symbol="O">O</button>
+          </div>
+        </div>
+
+        <div class="control-card">
+          <span class="control-label">First move</span>
+          <div id="turn-picker" class="option-picker" role="group" aria-label="First move">
+            <button type="button" class="option-chip active" data-turn="human">You</button>
+            <button type="button" class="option-chip" data-turn="ai">AI</button>
+          </div>
+        </div>
+
+        <div class="control-card">
+          <span class="control-label">Difficulty</span>
+          <div id="difficulty-picker" class="difficulty-picker" role="group" aria-label="Difficulty">
+            <button type="button" class="difficulty-chip" data-difficulty="easy">Easy</button>
+            <button type="button" class="difficulty-chip" data-difficulty="medium">Medium</button>
+            <button type="button" class="difficulty-chip active" data-difficulty="hard">Hard</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-row">
+        <button id="new-game" class="primary-button">Start New Game</button>
+        <button id="reset-score" class="ghost-button">Reset Score</button>
+      </div>
+
+      <div class="scoreboard" aria-label="Scoreboard">
+        <article class="score-card">
+          <span class="score-title">You</span>
+          <strong id="human-score">0</strong>
+        </article>
+        <article class="score-card">
+          <span class="score-title">Draws</span>
+          <strong id="draw-score">0</strong>
+        </article>
+        <article class="score-card">
+          <span class="score-title">AI</span>
+          <strong id="ai-score">0</strong>
+        </article>
+      </div>
+    </section>
+
+    <section class="board-panel">
+      <div class="status-card">
+        <p class="status-label">Now Playing</p>
+        <h2 id="status-message">Choose your setup and start playing.</h2>
+      </div>
+
+      <div class="board-frame">
+        <div id="board" class="board" role="grid" aria-label="Tic-Tac-Toe board">
+          <button class="cell" data-index="0" aria-label="Cell 1"></button>
+          <button class="cell" data-index="1" aria-label="Cell 2"></button>
+          <button class="cell" data-index="2" aria-label="Cell 3"></button>
+          <button class="cell" data-index="3" aria-label="Cell 4"></button>
+          <button class="cell" data-index="4" aria-label="Cell 5"></button>
+          <button class="cell" data-index="5" aria-label="Cell 6"></button>
+          <button class="cell" data-index="6" aria-label="Cell 7"></button>
+          <button class="cell" data-index="7" aria-label="Cell 8"></button>
+          <button class="cell" data-index="8" aria-label="Cell 9"></button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

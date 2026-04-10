@@ -1,0 +1,351 @@
+:root {
+  --bg: #f4efe6;
+  --panel: rgba(255, 252, 247, 0.72);
+  --panel-strong: #fffaf2;
+  --text: #182126;
+  --muted: #5c676f;
+  --accent: #d55d3f;
+  --accent-deep: #9f3922;
+  --line: rgba(24, 33, 38, 0.12);
+  --shadow: 0 24px 80px rgba(39, 25, 16, 0.12);
+  --radius-xl: 32px;
+  --radius-lg: 22px;
+  --radius-md: 16px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Space Grotesk", sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(213, 93, 63, 0.18), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(34, 122, 117, 0.18), transparent 24%),
+    linear-gradient(135deg, #f7f3ea 0%, #efe7da 100%);
+}
+
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: auto;
+  border-radius: 50%;
+  filter: blur(10px);
+  pointer-events: none;
+}
+
+body::before {
+  width: 16rem;
+  height: 16rem;
+  top: 4rem;
+  right: 6rem;
+  background: rgba(213, 93, 63, 0.1);
+}
+
+body::after {
+  width: 20rem;
+  height: 20rem;
+  bottom: -5rem;
+  left: -3rem;
+  background: rgba(34, 122, 117, 0.12);
+}
+
+.app-shell {
+  width: min(980px, calc(100% - 2rem));
+  margin: 0 auto;
+  min-height: 100vh;
+  padding: 1rem 0;
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 1rem;
+  align-items: stretch;
+}
+
+.hero-panel,
+.board-panel {
+  position: relative;
+  background: var(--panel);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(18px);
+}
+
+.hero-panel {
+  padding: 1.35rem;
+  overflow: hidden;
+}
+
+.hero-panel::after {
+  content: "";
+  position: absolute;
+  width: 12rem;
+  height: 12rem;
+  right: -4rem;
+  top: -4rem;
+  background: linear-gradient(135deg, rgba(213, 93, 63, 0.22), rgba(255, 255, 255, 0));
+  border-radius: 50%;
+}
+
+.eyebrow,
+.status-label,
+.control-label,
+.score-title {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+h1,
+h2 {
+  margin: 0;
+  font-family: "DM Serif Display", serif;
+  font-weight: 400;
+  line-height: 0.95;
+}
+
+h1 {
+  margin: 0.25rem 0 0.8rem;
+  font-size: clamp(1.65rem, 3vw, 2.35rem);
+  line-height: 0.95;
+}
+
+.control-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.control-card:last-child {
+  grid-column: 1 / -1;
+}
+
+.control-card,
+.score-card,
+.status-card,
+.board-frame {
+  background: rgba(255, 255, 255, 0.58);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+}
+
+.control-card {
+  display: block;
+  padding: 0.8rem 0.8rem 0.7rem;
+}
+
+.difficulty-picker {
+  display: flex;
+  gap: 0.45rem;
+  margin-top: 0.45rem;
+}
+
+.option-picker {
+  display: flex;
+  gap: 0.45rem;
+  margin-top: 0.45rem;
+}
+
+.difficulty-chip,
+.option-chip {
+  flex: 1 1 0;
+  min-width: 0;
+  border: 1px solid rgba(24, 33, 38, 0.12);
+  background: #fffdf8;
+  color: var(--muted);
+  border-radius: 12px;
+  padding: 0.7rem 0.5rem;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.1;
+  text-align: center;
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: none;
+}
+
+.difficulty-chip.active,
+.option-chip.active {
+  background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 10px 20px rgba(159, 57, 34, 0.18);
+}
+
+.action-row {
+  margin-top: 0.8rem;
+  display: flex;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+}
+
+button {
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+button:hover,
+button:focus-visible {
+  transform: translateY(-1px);
+}
+
+.primary-button,
+.ghost-button {
+  border: none;
+  border-radius: 999px;
+  padding: 0.75rem 1.05rem;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.primary-button {
+  background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+  color: white;
+  box-shadow: 0 14px 30px rgba(159, 57, 34, 0.24);
+}
+
+.ghost-button {
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--text);
+  border: 1px solid var(--line);
+}
+
+.scoreboard {
+  margin-top: 0.9rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.score-card {
+  padding: 0.75rem;
+}
+
+.score-card strong {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 1.45rem;
+}
+
+.board-panel {
+  padding: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.status-card {
+  padding: 0.95rem 1rem 0.85rem;
+}
+
+h2 {
+  margin-top: 0.3rem;
+  font-size: clamp(1.25rem, 2.2vw, 1.8rem);
+}
+
+.board-frame {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  padding: 0.75rem;
+}
+
+.board {
+  width: min(100%, 45vh, 420px);
+  aspect-ratio: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.65rem;
+}
+
+.cell {
+  border: none;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(247, 240, 231, 0.96));
+  color: var(--text);
+  font-family: "DM Serif Display", serif;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  cursor: pointer;
+  box-shadow: inset 0 -8px 20px rgba(64, 38, 27, 0.06);
+}
+
+.cell[data-value="X"] {
+  color: var(--accent-deep);
+}
+
+.cell[data-value="O"] {
+  color: #227a75;
+}
+
+.cell:disabled {
+  cursor: default;
+  opacity: 1;
+}
+
+.cell:not(:disabled):hover,
+.cell:not(:disabled):focus-visible {
+  box-shadow:
+    inset 0 -8px 20px rgba(64, 38, 27, 0.06),
+    0 14px 30px rgba(39, 25, 16, 0.12);
+}
+
+.cell.win-cell {
+  background: linear-gradient(180deg, rgba(213, 93, 63, 0.16), rgba(34, 122, 117, 0.14));
+}
+
+@media (max-width: 900px) {
+  .app-shell {
+    min-height: auto;
+    grid-template-columns: 1fr;
+  }
+
+  .hero-panel,
+  .board-panel {
+    padding: 1.4rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .app-shell {
+    width: min(100% - 1rem, 100%);
+    min-height: auto;
+    padding-top: 0.75rem;
+  }
+
+  .control-grid,
+  .scoreboard {
+    grid-template-columns: 1fr;
+  }
+
+  .difficulty-picker {
+    flex-direction: column;
+  }
+
+  .option-picker {
+    flex-direction: column;
+  }
+
+  .action-row {
+    flex-direction: column;
+  }
+
+  .primary-button,
+  .ghost-button {
+    width: 100%;
+  }
+
+  .board {
+    width: min(100%, 78vw);
+    gap: 0.65rem;
+  }
+
+  .cell {
+    border-radius: 18px;
+  }
+}
